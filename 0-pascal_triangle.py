@@ -3,23 +3,24 @@
 
 
 def pascal_triangle(n):
-    """fucnrion to get the number of pascal triangle"""
+    """
+    Generate Pascal's Triangle up to the given number of rows n.
+    """
     if n <= 0:
         return []
 
-    pascal_triangle = [0] * n
-
-    for i in range(n):
-        new_row = [0] * (i+1)
-        new_row[0] = 1
-        new_row[len(new_row) - 1] = 1
-
+    triangle = [[1]]
+    for i in range(1, n):
+        row = [1]
         for j in range(1, i):
-            if j > 0 and j < len(new_row):
-                a = pascal_triangle[i - 1][j]
-                b = pascal_triangle[i - 1][j - 1]
-                new_row[j] = a + b
+            row.append(triangle[i-1][j-1] + triangle[i-1][j])
+        row.append(1)
+        triangle.append(row)
 
-        pascal_triangle[i] = new_row
+    return triangle
 
-    return pascal_triangle
+# Test the function
+n = 5
+triangle = pascal_triangle(n)
+for row in triangle:
+    print(row)
