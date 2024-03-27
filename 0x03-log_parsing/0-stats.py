@@ -3,7 +3,7 @@
 """Script that reads stdin line by line and computes metrics"""
 
 import sys
-
+import signal
 
 def print_stats(status_counts, total_size):
     """Prints the file size and the number of lines for each status code"""
@@ -13,10 +13,16 @@ def print_stats(status_counts, total_size):
         if count != 0:
             print("{}: {:d}".format(status_code, count))
 
+def signal_handler(sig, frame):
+    """Handles the keyboard interrupt signal"""
+    print_stats(status_counts, total_size)
+    sys.exit(0)
 
 status_counts = {"200": 0, "301": 0, "400": 0, "401": 0, "403": 0, "404": 0, "405": 0, "500": 0}
 total_size = 0
 line_number = 0
+
+signal.signal(signal.SIGINT, signal_handler)
 
 try:
     for line in sys.stdin:
@@ -42,4 +48,4 @@ try:
 
 except KeyboardInterrupt:
     print_stats(status_counts, total_size)
-    raise
+    sys.exit(0)
